@@ -13,5 +13,6 @@ libraryDependencies ++= Seq(
   "org.slf4j" % "slf4j-simple" % "1.6.4",
 //  "me.vican.jorge" %% "dijon" % "0.6.0",
 //  "net.liftweb" %% "lift-json" % "2.5.1"
-  "com.lihaoyi" %% "requests" % "0.6.9"
+  "com.lihaoyi" %% "requests" % "0.6.9",
+  "ch.megard" %% "akka-http-cors" % "1.1.3"
 )

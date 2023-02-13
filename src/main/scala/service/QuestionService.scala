@@ -1,9 +1,10 @@
 package service
 
+import akka.http.scaladsl.marshalling.ToResponseMarshallable
 import akka.http.scaladsl.model.Multipart
 import akka.http.scaladsl.server.Directives.{complete, extractRequestContext, fileUpload, onSuccess}
 import akka.stream.scaladsl.FileIO
-import models.Result
+import models.{Question, Result}
 import repository.{QuestionRepository, ResultRepository}
 
 import java.io.File
@@ -12,6 +13,7 @@ import scala.reflect.io.Directory
 import scala.util.{Failure, Success}
 
 object QuestionService {
+
   val tempLocalFilePath = "c:\\test"
 
   def addQuestionsFromFile(request: Multipart.FormData) = {
@@ -49,7 +51,16 @@ object QuestionService {
     }
   }
 
-  def getAllQuestions:Set[String]={
-    ResultRepository.getAllQuestions
+  def getAllQuestionsFromResults:Set[String]={
+    ResultRepository.getAllQuestionsFromResults
   }
+
+  def addQuestion(question: Question): String = {
+    QuestionRepository.addQuestion(question)
+  }
+
+  def getAllQuestions(): List[Question] = {
+    QuestionRepository.getAllQuestions()
+  }
+
 }

@@ -16,6 +16,6 @@ object Main extends ObjectJsonFormat with SprayJsonSupport {
 
   def main(args: Array[String]): Unit = {
     //Http().bindAndHandle(UserRouter.route, config.getString("http.interface"), config.getInt("http.port"))
-    Http().newServerAt("localhost", 8083).bind(UserRouter.route ~ ResultRouter.route ~ QuestionRouter.route)
+    Http().newServerAt("localhost", 8083).bind(ResultRouter.route ~ QuestionRouter.route)
   }
 }

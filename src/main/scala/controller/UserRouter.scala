@@ -10,24 +10,26 @@ import akka.http.scaladsl.server.Directives._
 
 
 object UserRouter extends ObjectJsonFormat with SprayJsonSupport {
-  val route: Route = pathPrefix("api" / "user") {
-    {
-      post {
-        entity(as[User]) {
-          //p => complete(models.User("UUID", 99))
-
-          user => {
-            UserService.writeUser(user)
-            complete(user.name)
-          }
-        }
-      }
-    } ~ get {
-      {
-
-        complete(UserService.readUsers)
-        //complete("GETUSERS")
-      }
-    }
-  }
 }
+
+  //val route: Route = pathPrefix("api" / "user") {
+
+//      post {
+//        entity(as[User]) {
+//          //p => complete(models.User("UUID", 99))
+//
+//          user => {
+//            UserService.writeUser(user)
+//            complete(user.name)
+//          }
+//        }
+//      }
+//    } ~ get {
+//      {
+//
+//        complete(UserService.readUsers)
+//        //complete("GETUSERS")
+//      }
+//    }
+//  }
+

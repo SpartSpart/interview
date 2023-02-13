@@ -15,10 +15,14 @@ object ResultService {
   }
 
   def getAllQuestions:Set[String]={
-    ResultRepository.getAllQuestions
+    ResultRepository.getAllQuestionsFromResults
   }
 
-  def getResultByUserName(userName: String): ToResponseMarshallable = {
+  def getResultByUserName(userName: String): Result = {
     ResultRepository.getResultByUserName(userName)
+  }
+
+  def getAllUsers(): List[User] = {
+    ResultRepository.getAllAvailableUsers()
   }
 }
