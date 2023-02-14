@@ -1,0 +1,63 @@
+.button {
+    width: auto;
+    height: 30px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 11px;
+
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 500;
+    color: #000;
+    background-color: lightskyblue;
+    border: none;
+    border-radius: 45px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+    margin: 10px
+}
+
+button:hover {
+    transform: translateY(-3px);
+}
+
+.markInput{
+    width: 10% !important;
+    margin-right: 2% !important;
+}
+
+.commentInput{
+    width: 88% !important;
+}
+
+.questionComponent{
+    border: solid grey;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.questionText {
+    width: 100%;
+    padding: 12px 20px;
+    color: blue;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.answerText {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.bold {
+    font-weight: bold;
+}

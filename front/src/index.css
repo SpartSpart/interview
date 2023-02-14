@@ -1,0 +1,120 @@
+h1 {
+    color: green;
+    font-size: 50px;
+}
+
+button {
+    width: 140px;
+    height: 45px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 11px;
+
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 500;
+    color: #000;
+    background-color: aqua;
+    border: none;
+    border-radius: 45px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+    margin: 5px
+}
+
+button:hover {
+    transform: translateY(-3px);
+}
+
+table {
+    width: 100%;
+    border: none;
+    margin-bottom: 20px;
+    border-collapse: separate;
+}
+table thead th {
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    padding: 10px 15px;
+    background: #EDEDED;
+    font-size: 14px;
+    border-top: 1px solid #ddd;
+}
+table tr th:first-child, .table tr td:first-child {
+    border-left: 1px solid #ddd;
+}
+table tr th:last-child, .table tr td:last-child {
+    border-right: 1px solid #ddd;
+}
+table thead tr th:first-child {
+    border-radius: 20px 0 0 0;
+}
+table thead tr th:last-child {
+    border-radius: 0 20px 0 0;
+}
+table tbody td {
+    text-align: left;
+    border: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    vertical-align: top;
+}
+table tbody tr:nth-child(even) {
+    background: #F8F8F8;
+}
+table tbody tr:last-child td{
+    border-bottom: 1px solid #ddd;
+}
+table tbody tr:last-child td:first-child {
+    border-radius: 0 0 0 20px;
+}
+table tbody tr:last-child td:last-child {
+    border-radius: 0 0 20px 0;
+}
+
+input[type=text], select {
+    width: 440px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=number], select {
+    width: 440px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=date], select {
+    width: 440px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=submit] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type=submit]:hover {
+    background-color: #45a049;
+}
