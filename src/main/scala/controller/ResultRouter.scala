@@ -8,9 +8,6 @@ import imlicit.ObjectJsonFormat
 import models.{Result, User}
 import service.{ResultService, UserService}
 
-import java.lang.Exception
-import scala.util.control.Exception
-
 
 object ResultRouter extends ObjectJsonFormat with SprayJsonSupport {
   val route: Route = cors(){

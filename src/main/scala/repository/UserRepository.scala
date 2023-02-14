@@ -24,7 +24,7 @@ object UserRepository {
       .load()
 
 
-    users.collect().map(row => User(row.getAs("id"), row.getAs("name"), (row.getAs("age"))))
+    users.collect().map(row => User(row.getAs("id"), row.getAs("name"), row.getAs("age"), row.getAs("date")))
     //    users.collect().map(row=>models.User(Integer.parseInt(row.get(2).toString),row.get(3).toString, Integer.parseInt(row.get(1).toString)))
 
 

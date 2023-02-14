@@ -1,6 +1,8 @@
 import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
+import styles from "../css/newinterview.module.css";
+import {v4 as uuidv4} from 'uuid';
 
 const updatedState = (arr) => arr.reduce((acc, item) => {
     if (acc[item.theme]) {
@@ -12,9 +14,10 @@ const updatedState = (arr) => arr.reduce((acc, item) => {
     acc[item.theme].push(item);
     return acc;
 }, {});
-const userInputs = ['name', 'age', 'id'];
+
 const questionInputs = ['mark', 'comment'];
-const newQuestionInput = ['description', 'answer', 'mark', 'comment'];
+
+// const newQuestionInput = ['description', 'answer', 'mark', 'comment'];
 
 function NewInterview() {
     const [tabs, setTabs] = useState([]);
@@ -70,7 +73,7 @@ function NewInterview() {
         e.preventDefault();
 
         if (!data.question.length) return;
-
+        data.user.id = uuidv4();
         axios.post('http://localhost:8083/api/result', {...data})
 
 
@@ -83,7 +86,7 @@ function NewInterview() {
             state = data.question.find((item) => item.description === name);
 
             if (state) {
-               return;
+                return;
             } else {
                 setData((prev) => ({
                     ...prev,
@@ -91,102 +94,127 @@ function NewInterview() {
                 }))
             }
         }
-        }
-
-
-        return (
-            <>
-                <h1>New Interview</h1>
-                <Link to={'/'}>
-                    <button> Main</button>
-                </Link>
-                <Link to={'/new/interview'}>
-                    <button> New interview</button>
-                </Link>
-                <Link to={'/report'}>
-                    <button> Report</button>
-                </Link>
-
-                <div>
-                    <form action="">
-                        {
-
-                            <label key='userName'>
-                                <span>Name</span>
-                                <input type="text" id="name" name="name" onChange={handleUserChangeClick}/>
-                                <span>Age</span>
-                                <input type="number" id="age" name="age" onChange={handleUserChangeClick}/>
-                                <span>id</span>
-                                <input type="number" id="id" name="id" onChange={handleUserChangeClick}/>
-                            </label>
-
-
-                            // userInputs.map((item) => (
-                            //     <label key={item}>
-                            //         <span>{item}</span>
-                            //         <input name={item} onChange={handleUserChangeClick} type="text"/>
-                            //     </label>
-                            // ))
-                        }
-                    </form>
-                </div>
-
-                <div>
-                    {
-                        tabs
-                        && tabs.map((item) => {
-                            return <button
-                                onClick={() => setActiveTab(item)}
-                                style={{fontSize: '50px'}}
-                                key={item}>
-                                {item}
-                            </button>
-                        })
-                    }
-                    {
-                        activeTab
-                        && question[activeTab]
-                        && question[activeTab].map(({description, answer}, i) => {
-                            return (
-                                <div key={i + description}>
-                                    <p>{description}</p>
-                                    <p>{answer}</p>
-                                    <form action="">
-                                        {
-                                            questionInputs.map((item) => {
-                                                const jaLox = data.question.find((item) => item.description === description);
-
-                                                return <label key={item}>
-                                                    <span>{item}</span>
-                                                    <input
-                                                        value={(jaLox && jaLox[item]) || ''}
-                                                        name={item}
-
-                                                        type={item === 'mark' ? "number" : "text"}
-                                                        onChange={(e) => handleQuestionChangeClick(e, description)}
-                                                    />
-                                                </label>
-                                            })
-                                        }
-                                    </form>
-                                </div>
-                            )
-                        })
-                    }
-                </div>
-                {
-                    showAdd && newQuestionInput.map((u) => (
-                        <label key={u}>
-                            <span>{u}</span>
-                            <input name={u} onChange={handleAddQuestion} type="text"/>
-                        </label>
-                    ))
-                }
-
-                <button onClick={() => setShowAdd((prev) => !prev)}>Add Question</button>
-                <button type="submit" onClick={handleSubmitClick}>Submit</button>
-            </>
-        );
     }
 
-    export default NewInterview;
+
+    return (
+        <>
+            <h1>New Interview</h1>
+            <Link to={'/'}>
+                <button> Main</button>
+            </Link>
+            <Link to={'/new/interview'}>
+                <button> New interview</button>
+            </Link>
+            <Link to={'/report'}>
+                <button> Report</button>
+            </Link>
+
+            <div>
+                <form action="">
+                    {
+
+                        <label key='userInfo'>
+
+                            <input
+                                placeholder={'Name'}
+                                type="text"
+                                id="name"
+                                name="name"
+                                onChange={handleUserChangeClick}/>
+                            <br/>
+
+                            <input
+                                placeholder={'Age'}
+                                type="number"
+                                id="age"
+                                name="age"
+                                onChange={handleUserChangeClick}/>
+                            <br/>
+
+                            <input
+                                placeholder={'date'}
+                                type="date"
+                                id="date"
+                                name="date"
+                                onChange={handleUserChangeClick}/>
+                            <br/>
+
+                        </label>
+                    }
+                </form>
+            </div>
+
+            <div>
+                {
+                    tabs
+                    && tabs.map((item) => {
+                        return <button
+                            className={styles.button}
+                            onClick={() => setActiveTab(item)}
+                            key={item}>
+                            {item}
+                        </button>
+                    })
+                }
+                {
+                    activeTab
+                    && question[activeTab]
+                    && question[activeTab].map(({description, answer}, i) => {
+                        return (
+                            <div key={i + description} className={styles.questionComponent}>
+                                <p className={styles.questionText}>
+                                    <span className={styles.bold}> Question: </span>
+                                    {description}</p>
+                                <p className={styles.answerText}>
+                                    <span className={styles.bold}> Answer: </span>
+                                    {answer}</p>
+                                <form action="">
+                                    {
+                                        questionInputs.map((item) => {
+                                            const jaLox = data.question.find((item) => item.description === description);
+
+                                            return <label key={item}>
+                                                <input
+                                                    value={(jaLox && jaLox[item]) || ''}
+                                                    name={item}
+                                                    placeholder={item}
+                                                    className={item === 'mark' ? styles.markInput : styles.commentInput}
+                                                    type={item === 'mark' ? "number" : "text"}
+                                                    onChange={(e) => handleQuestionChangeClick(e, description)}
+                                                />
+                                            </label>
+                                        })
+                                    }
+                                </form>
+                            </div>
+                        )
+                    })
+                }
+            </div>
+            {
+                // showAdd && newQuestionInput.map((u) => (
+                //     <label key={u}>
+                //         <span>{u}</span>
+                //         <input name={u} onChange={handleAddQuestion} type="text"/>
+                //     </label>
+                // ))
+            }
+
+            {/*<button*/}
+            {/*    // visibility = 'hidden'//{(!data.question.length ? 'hidden' : 'visible')}*/}
+            {/*    className={styles.button}*/}
+            {/*    onClick={() => setShowAdd((prev) => !prev)}>*/}
+            {/*    Add Question*/}
+            {/*</button>*/}
+            <button
+                // className={styles.button}
+                type="submit"
+                onClick={handleSubmitClick}>
+                Submit
+            </button>
+        </>
+    );
+}
+
+export default NewInterview;

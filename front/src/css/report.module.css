@@ -14,3 +14,21 @@
     font-family: sans-serif;
     text-align: center;
 }
+
+.reportTable{
+    width: 100%;
+    border: solid;
+}
+
+.tr {
+    padding: 3px;
+    border: 1px solid black;
+    text-align: -webkit-center;
+}
+
+.select{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 440px;
+    border-radius: 20px !important;
+}

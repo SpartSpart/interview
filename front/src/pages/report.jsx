@@ -9,20 +9,22 @@ import Select from 'react-select'
 function Report({data}) {
     const [userState, SetUserState] = useState([]);
     const [state, SetState] = useState([]);
-    const MyComponent = () => (
-        <Select options={users} />
-    )
+    const totalQuestions = state.length;
+    const totalMark = state.reduce((acc, element) => +element.mark + acc, 0)
+    const averageValue = (totalMark / totalQuestions).toFixed(3)
 
-    const users = userState.map((item) => item.name)
-
-    // const [activeUser, setActiveUser] = useState();
-
+    const users = userState.map((item) => ({value: item.name, label: item.name + ' | ' + item.date}))
 
     function getReport(activeUser) {
         {
-            if (activeUser)
+            if (activeUser) {
                 axios.get('http://localhost:8083/api/result/' + activeUser)
-                    .then((res => SetState(res.data.question)))
+                    .then((res => {
+                        SetState(res.data.question)
+                        //   SetTotalMark(res.data.question.map(u=>+u.mark).reduce((totalQuestions, mark) => totalQuestions + mark));
+                    }))
+
+            }
         }
     }
 
@@ -45,35 +47,18 @@ function Report({data}) {
                 <button> Report</button>
             </Link>
 
+
             <div>
-                <ComboBox
-                    options={userState.map((item) => item.name)}
-                    placeholder="choose user"
-                    defaultIndex={0}
-                    optionsListMaxHeight={300}
-                    onSelect={(user) => getReport(user)
-                    }
-                    focusColor="#20C374"
-                    renderOptions={(option) => (
-                        <div>{option}</div>
-
-                    )}
-                />
-
-
-                <MyComponent>
-                    My Component
-                </MyComponent>
-
-
-                {/*<button onClick={getReport}>*/}
-                {/*    getReport*/}
-                {/*</button>*/}
+                <Select
+                    className={styles.select}
+                    options={users.sort()}
+                    onChange={(user) => getReport(user.value)}>
+                </Select>
             </div>
-
+            <h2> Result </h2>
 
             <div>
-                <table>
+                <table id={'ResultTable'}>
                     <thead>
                     <tr>
                         <th>theme</th>
@@ -82,26 +67,47 @@ function Report({data}) {
                         <th>comment</th>
                     </tr>
                     </thead>
-                    {/*<tr>*/}
-                    {/*    <th>Company</th>*/}
-                    {/*    <th>Contact</th>*/}
-                    {/*    <th>Country</th>*/}
-                    {/*</tr>*/}
                     {
+
                         state.map(({description, theme, mark, comment}) => (
                             <tr key={description}>
-                                <td>{theme}</td>
-                                <td>{description}</td>
-                                <td>{mark}</td>
-                                <td>{comment}</td>
+                                <td className={styles.tr}>{theme}</td>
+                                <td className={styles.tr}> {description}</td>
+                                <td className={styles.tr}>{mark}</td>
+                                <td className={styles.tr}>{comment}</td>
                             </tr>
                         ))
                     }
-                </table>
+
+               </table>
             </div>
 
+            <div>
+                <h2> Total </h2>
+                <table>
+                    <thead>
+                    <th>Questions count</th>
+                    <th>Total Mark</th>
+                    <th>Average score</th>
+                    </thead>
+                    <tr>
+                        <td className={styles.tr}>
+                            {totalQuestions}
+                        </td>
+                        <td className={styles.tr}>
+                            {totalMark}
+                        </td>
+                        <td className={styles.tr}>
+                            {averageValue}
+                        </td>
+                    </tr>
+
+                </table>
+
+            </div>
         </>
     );
 }
+
 
 export default Report;
