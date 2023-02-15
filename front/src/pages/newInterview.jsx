@@ -3,6 +3,8 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import styles from "../css/newinterview.module.css";
 import {v4 as uuidv4} from 'uuid';
+import alertify from 'alertifyjs';
+import 'alertifyjs/build/css/alertify.css';
 
 const updatedState = (arr) => arr.reduce((acc, item) => {
     if (acc[item.theme]) {
@@ -24,16 +26,19 @@ function NewInterview() {
     const [activeTab, setActiveTab] = useState()
     const [question, setQuestion] = useState([]);
     const [data, setData] = useState({user: {}, question: []});
-    const [showAdd, setShowAdd] = useState(false);
+    // const [showAdd, setShowAdd] = useState(false);
 
     useEffect(() => {
-        axios.get('http://localhost:8083/api/question/getall')
-            .then((res) => updatedState(res.data))
-            .then((res) => {
-                setTabs(Object.keys(res));
-                setQuestion(res);
-            })
-    }, [])
+            axios.get('http://localhost:8083/api/question/getall')
+                .then((res) => updatedState(res.data))
+                .then((res) => {
+                    setTabs(Object.keys(res));
+                    setQuestion(res);
+                })
+                .catch((error) => alertify.alert(error.message));
+
+        }
+        , [])
 
     const handleUserChangeClick = (e) => {
         const {name, value} = e.target;
@@ -72,10 +77,26 @@ function NewInterview() {
     const handleSubmitClick = (e) => {
         e.preventDefault();
 
-        if (!data.question.length) return;
-        data.user.id = uuidv4();
-        axios.post('http://localhost:8083/api/result', {...data})
+        if (!data.question.length)
+            // || !data.user.name.null
+            // || !data.user.name.null
+            // || !data.user.name.null) {
+        {
+            alertify.alert("Не заполнены обзательные поля");
+            console.log(!!data.user.name.null)
+            return;
+        }
 
+        console.log(data.user)
+
+        data.user.id = uuidv4();
+        const r = axios.post('http://localhost:8083/api/result', {...data})
+            .then((res) => {
+                console.log(res.code)
+            })
+            .then(alertify.alert('Success'))
+            .catch((error) =>
+                alertify.alert(error.response.data.toString()))
 
     }
 
@@ -96,7 +117,6 @@ function NewInterview() {
         }
     }
 
-
     return (
         <>
             <h1>New Interview</h1>
@@ -113,7 +133,6 @@ function NewInterview() {
             <div>
                 <form action="">
                     {
-
                         <label key='userInfo'>
 
                             <input
@@ -146,17 +165,19 @@ function NewInterview() {
             </div>
 
             <div>
-                {
-                    tabs
-                    && tabs.map((item) => {
-                        return <button
-                            className={styles.button}
-                            onClick={() => setActiveTab(item)}
-                            key={item}>
-                            {item}
-                        </button>
-                    })
-                }
+                <div className={styles.themes}>
+                    {
+                        tabs
+                        && tabs.map((item) => {
+                            return <button
+                                className={styles.button}
+                                onClick={() => setActiveTab(item)}
+                                key={item}>
+                                {item}
+                            </button>
+                        })
+                    }
+                </div>
                 {
                     activeTab
                     && question[activeTab]
