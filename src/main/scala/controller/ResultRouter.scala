@@ -5,19 +5,22 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives.cors
 import imlicit.ObjectJsonFormat
-import models.{Result, User}
-import service.{ResultService, UserService}
-
+import models.{Result}
+import service.{ResultService}
 
 object ResultRouter extends ObjectJsonFormat with SprayJsonSupport {
-  val route: Route = cors(){
+  val route: Route = cors() {
     post {
       path("api" / "result") {
         entity(as[Result]) {
           result => {
-            ResultService.saveResult(result)
-            complete(result.user.name)
-            complete("POST")
+            try {
+              ResultService.saveResult(result)
+               complete("Result for " + result.user.name + " saved successfully" )
+            }
+            catch {
+              case e: Exception => complete(500 -> e.getMessage)
+            }
           }
         }
       }

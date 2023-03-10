@@ -1,13 +1,11 @@
 package repository
 
-import akka.http.scaladsl.model.Multipart
 import com.google.gson.Gson
 import models.{Question, Result}
 import org.apache.spark.sql.{Encoders, SparkSession}
 import org.bson.Document
 import com.mongodb.spark.MongoSpark
 
-import repository.UserRepository.spark
 
 
 object QuestionRepository {
@@ -34,14 +32,14 @@ object QuestionRepository {
   def addData(tempFilePath: String) = {
     val a = getDataset(tempFilePath)
 
-   // a.foreach(a.collect().foreach(e=>e.))
-    getDataset(tempFilePath).write.format("com.mongodb.spark.sql.DefaultSource")
+      getDataset(tempFilePath).write.format("com.mongodb.spark.sql.DefaultSource")
       .option("database", "interview")
       .option("collection", "question")
       .mode("overwrite")
       .save()
-  }
 
+
+  }
 
   def getAllQuestionsFromResult: Set[String] = {
     val results = spark.read.format("com.mongodb.spark.sql.DefaultSource")

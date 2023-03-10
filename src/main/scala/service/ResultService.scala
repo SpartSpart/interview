@@ -2,7 +2,7 @@ package service
 
 import akka.http.scaladsl.marshalling.ToResponseMarshallable
 import models.{Result, User}
-import repository.{ResultRepository, UserRepository}
+import repository.ResultRepository
 
 object ResultService {
 

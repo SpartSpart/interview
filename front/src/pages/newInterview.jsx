@@ -19,14 +19,18 @@ const updatedState = (arr) => arr.reduce((acc, item) => {
 
 const questionInputs = ['mark', 'comment'];
 
-// const newQuestionInput = ['description', 'answer', 'mark', 'comment'];
+const newQuestionInput = ['description', 'answer', 'mark', 'comment'];
+
+const addQuestionInitial = {theme: '', mark: '', comment: '', description: '', answer: ''};
+const dataInitial = {user: {}, question: []};
 
 function NewInterview() {
     const [tabs, setTabs] = useState([]);
     const [activeTab, setActiveTab] = useState()
     const [question, setQuestion] = useState([]);
-    const [data, setData] = useState({user: {}, question: []});
-    // const [showAdd, setShowAdd] = useState(false);
+    const [data, setData] = useState(dataInitial);
+    const [showAdd, setShowAdd] = useState(false);
+    const [newQuestion, setNewQuestion] = useState(addQuestionInitial);
 
     useEffect(() => {
             axios.get('http://localhost:8083/api/question/getall')
@@ -74,27 +78,46 @@ function NewInterview() {
         }
     }
 
+    const setStateToDefault = () => {
+        setData(dataInitial)
+        // setNewQuestion(addQuestionInitial)
+    }
+
+
+    const test = () => {
+        const arr = {...question};
+        const key = newQuestion.theme;
+        const value = arr[key].concat(newQuestion);
+        setQuestion((prev) => ({...prev, [key]: value}))
+    }
+
     const handleSubmitClick = (e) => {
         e.preventDefault();
 
-        if (!data.question.length)
-            // || !data.user.name.null
-            // || !data.user.name.null
-            // || !data.user.name.null) {
-        {
-            alertify.alert("Не заполнены обзательные поля");
-            console.log(!!data.user.name.null)
-            return;
-        }
+        //  test()
 
-        console.log(data.user)
+        // if (!data.question.length)
+        // //     // || !data.user.name.null
+        // //     // || !data.user.name.null
+        // //     // || !data.user.name.null) {
+        // {
+        //     alertify.alert("Не заполнены обзательные поля");
+        //     console.log(!!data.user.name.null)
+        //     return;
+        // }
+
+        // const {theme, description, mark} = newQuestion;
+        // const newData = {...data};
+        // newData.question.push(newQuestion)
+        // if (!theme && !description && !mark && !data.question.length) {
+        //     alertify.alert("Не заполнены обзательные поля");
+        //     return
+        // }
 
         data.user.id = uuidv4();
-        const r = axios.post('http://localhost:8083/api/result', {...data})
-            .then((res) => {
-                console.log(res.code)
-            })
-            .then(alertify.alert('Success'))
+        axios.post('http://localhost:8083/api/result', {...data}) //...newData
+            .then(() => alertify.alert('Success'))
+            .then(() => setStateToDefault())
             .catch((error) =>
                 alertify.alert(error.response.data.toString()))
 
@@ -102,19 +125,12 @@ function NewInterview() {
 
     const handleAddQuestion = (e) => {
         const {name, value} = e.target;
-        let state;
-        if (name === 'description') {
-            state = data.question.find((item) => item.description === name);
-
-            if (state) {
-                return;
-            } else {
-                setData((prev) => ({
-                    ...prev,
-                    question: []
-                }))
-            }
+        const obj = {
+            theme: activeTab,
+            [name]: value,
         }
+
+        setNewQuestion((prev) => ({...prev, ...obj}));
     }
 
     return (
@@ -136,28 +152,34 @@ function NewInterview() {
                         <label key='userInfo'>
 
                             <input
+                                className={styles.userInfoInput}
                                 placeholder={'Name'}
+                                value={data.user['name']}
                                 type="text"
                                 id="name"
                                 name="name"
                                 onChange={handleUserChangeClick}/>
-                            <br/>
+                            {/*<br/>*/}
 
                             <input
+                                className={styles.userInfoInput}
                                 placeholder={'Age'}
+                                value={data.user['age']}
                                 type="number"
                                 id="age"
                                 name="age"
                                 onChange={handleUserChangeClick}/>
-                            <br/>
+                            {/*<br/>*/}
 
                             <input
+                                className={styles.userInfoInput}
                                 placeholder={'date'}
+                                value={data.user['date']}
                                 type="date"
                                 id="date"
                                 name="date"
                                 onChange={handleUserChangeClick}/>
-                            <br/>
+                            {/*<br/>*/}
 
                         </label>
                     }
@@ -213,14 +235,14 @@ function NewInterview() {
                     })
                 }
             </div>
-            {
-                // showAdd && newQuestionInput.map((u) => (
-                //     <label key={u}>
-                //         <span>{u}</span>
-                //         <input name={u} onChange={handleAddQuestion} type="text"/>
-                //     </label>
-                // ))
-            }
+            {/*{*/}
+            {/*    showAdd && newQuestionInput.map((u) => (*/}
+            {/*        <label key={u}>*/}
+            {/*            <span>{u}</span>*/}
+            {/*            <input value={newQuestion[u]} name={u} onChange={handleAddQuestion} type="text"/>*/}
+            {/*        </label>*/}
+            {/*    ))*/}
+            {/*}*/}
 
             {/*<button*/}
             {/*    // visibility = 'hidden'//{(!data.question.length ? 'hidden' : 'visible')}*/}
@@ -228,12 +250,15 @@ function NewInterview() {
             {/*    onClick={() => setShowAdd((prev) => !prev)}>*/}
             {/*    Add Question*/}
             {/*</button>*/}
-            <button
-                // className={styles.button}
-                type="submit"
-                onClick={handleSubmitClick}>
-                Submit
-            </button>
+            <div
+                className={styles.submit}>
+                <button
+                   // style={right: 20px}
+                    type="submit"
+                    onClick={handleSubmitClick}>
+                    Submit
+                </button>
+            </div>
         </>
     );
 }

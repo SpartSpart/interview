@@ -1,4 +1,4 @@
-import controller.{QuestionRouter, ResultRouter, UserRouter}
+import controller.{QuestionRouter, ResultRouter}
 import imlicit.ObjectJsonFormat
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
@@ -15,7 +15,6 @@ object Main extends ObjectJsonFormat with SprayJsonSupport {
   implicit val system = ActorSystem(Behaviors.empty, "Test")
 
   def main(args: Array[String]): Unit = {
-    //Http().bindAndHandle(UserRouter.route, config.getString("http.interface"), config.getInt("http.port"))
     Http().newServerAt("localhost", 8083).bind(ResultRouter.route ~ QuestionRouter.route)
   }
 }

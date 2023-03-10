@@ -5,8 +5,8 @@ import spray.json.DefaultJsonProtocol
 
 trait ObjectJsonFormat extends DefaultJsonProtocol {
   implicit val userFormatted = jsonFormat4(User)
-  implicit val questionFomatted = jsonFormat3(Question)
-  implicit val questionFormatted = jsonFormat4(QuestionResult)
+  implicit val questionFormatted = jsonFormat3(Question)
+  implicit val questionResultFormatted = jsonFormat4(QuestionResult)
   implicit val resultFormatted = jsonFormat2(Result)
 }
 

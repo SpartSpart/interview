@@ -3,13 +3,10 @@ package repository
 import akka.http.scaladsl.marshalling.ToResponseMarshallable
 import com.google.gson.Gson
 import com.mongodb.spark.MongoSpark
-import models.{Question, QuestionResult, Result, User}
+import models.{Result, User}
 import org.apache.spark._
 import org.apache.spark.sql.{Dataset, Encoders, SparkSession}
 import org.bson.Document
-
-import scala.runtime.Nothing$
-
 
 object ResultRepository {
 
@@ -24,39 +21,41 @@ object ResultRepository {
   val encoder = org.apache.spark.sql.Encoders.product[Result]
 
   def getAllResultsFromDB: sql.DataFrame = {
-     spark.read.format ("com.mongodb.spark.sql.DefaultSource")
-    .option ("database", "interview")
-    .option ("collection", "result")
-    .load ()
+    val resultDataFrame = spark.read.format("com.mongodb.spark.sql.DefaultSource")
+      .option("database", "interview")
+      .option("collection", "result")
+      .load()
+    resultDataFrame
   }
 
   def getAllResults = {
-    getAllResultsFromDB.as(encoder).collect().map(row => Result(row.user, row.question.toArray))
+   getAllResultsFromDB.as(encoder).collect().map(row => Result(row.user, row.question.toArray))
   }
+
 
   def saveResult(result: Result): Unit = {
 
     val gson = new Gson
     val jsonString = gson.toJson(result)
 
-    //    val rdd = spark.sparkContext.parallelize(Seq[Result](result))
 
     val document = spark.sparkContext.parallelize((1 to 1).map(_ => Document.parse(jsonString)))
-
-    MongoSpark.save(document)
+    if (recordExists(result))
+      throw new Exception("Record is already exist in database")
+    else
+      MongoSpark.save(document)
 
   }
 
   def getAllQuestionsFromResults: Set[String] = {
-    val allResults = getAllResultsFromDB.as(encoder).collect().map(row => Result(row.user, row.question.toArray))
+    val allResults = getAllResults
 
     allResults.toList.flatMap(element => element.question.map(q => q.description)).toSet
   }
 
 
-
   def getResultByUserName(userName: String): Result = {
-    val allResults = getAllResultsFromDB.as(encoder).collect().map(row => Result(row.user, row.question.toArray))
+    val allResults = getAllResults
 
     if (allResults.exists(r => r.user.name.equals(userName))) {
       allResults.find(r => r.user.name.equals(userName)).get
@@ -68,8 +67,18 @@ object ResultRepository {
   }
 
   def getAllAvailableUsers(): List[User] = {
-    val allResults = getAllResultsFromDB.as(encoder).collect().map(row => Result(row.user, row.question.toArray))
+    val allResults = getAllResults
     allResults.map(result => result.user).toList
   }
+
+  def recordExists(result: Result): Boolean = {
+    val allResults = getAllResults
+    allResults.foreach(res => {
+      if (res.user.name == result.user.name && res.user.date == result.user.date)
+        return true;
+    })
+    false
+  }
+
 
 }
